@@ -1,12 +1,33 @@
 # Fraud Investigation RAG Copilot
 
+**Evidence-based transaction investigation with explainable machine learning and retrieval-augmented policy analysis.**
+
+Python · FastAPI · Streamlit · LangGraph · XGBoost · TreeSHAP · PostgreSQL / pgvector
+
+[Quick start](#quick-start--windows) · [Example questions](#example-questions) · [Architecture](#architecture) · [Evaluation](#evaluation-and-tests) · [API guide](docs/API.md) · [Contributing](CONTRIBUTING.md)
+
 Investigate a PaySim transaction with database evidence, XGBoost risk, TreeSHAP explanations and cited investigation policies. The service saves a structured case report and remembers the selected transaction for follow-up questions.
 
 **Try:** `Investigate TXN_0000002`, then `Show previous transactions for this account`.
 
 ![Verified local investigator dashboard](reports/dashboard.png)
 
-This is a separate, self-contained project. The initial local build reads the source CSV from the neighboring FinShield project; no existing project files are modified and no source-code dependency on that project exists.
+## The problem
+
+Investigating a fraud alert usually requires switching between transaction records, model scores, account history and policy documents. This copilot brings those sources into one auditable report, showing both the evidence and what it cannot establish.
+
+**Project status:** working local portfolio application. The core test suite and local retrieval modes have been verified. PostgreSQL/Docker and live OpenAI calls still require integration verification. This is an analyst-support demonstration, not a production fraud decision system.
+
+## Example questions
+
+Start with a transaction, then ask follow-up questions in the same conversation:
+
+1. **Investigate TXN_0000002**
+2. **Show previous transactions for this account**
+3. **Which accounts sent to this destination?**
+4. **What is the high-risk escalation policy?**
+
+Other supported questions include `What is the score for TXN_0000002?`, `Calculate transaction velocity`, `Show similar transactions`, and `What does SHAP mean?`. The copilot cannot determine account-holder identity, KYC status, sanctions status or criminal intent from PaySim.
 
 ## Architecture
 
@@ -33,18 +54,28 @@ The investigation graph follows six explicit stages: transaction → prior histo
 
 ## Quick start · Windows
 
-Run these commands **inside this project directory** with Python 3.10 or 3.11:
+Clone the repository and run with Python 3.10 or 3.11. The generated demo requires no dataset download or API key:
 
 ```powershell
+git clone https://github.com/Sanchay20Shukla/fraud-investigation-copilot.git
+cd fraud-investigation-copilot
 python -m venv .venv
 .venv/Scripts/python.exe -m pip install -r requirements.txt
-.venv/Scripts/python.exe -m scripts.bootstrap --paysim ../finshield-ai/data/raw/paysim.csv --limit 200000
+.venv/Scripts/python.exe -m scripts.bootstrap --demo
 ./scripts/run-local.ps1
 ```
 
 Open the [dashboard](http://127.0.0.1:8510) or [interactive API docs](http://127.0.0.1:8010/docs).
 
-The current workspace already has a virtual environment, a 200,000-row database, a trained model and a policy index. Run the final command to start it again after stopping the services. The setup used `--system-site-packages` to reuse installed scientific libraries; the instructions above create an isolated environment for a new installation.
+The demo creates synthetic educational transactions, trains a model and indexes the policy documents. Its labels are generated from simple rules; demo metrics are not evidence of real fraud-detection performance. Raw datasets, local databases, environments and generated models are excluded from Git. Bootstrap creates the artifacts needed to run the application.
+
+To reproduce the reported PaySim experiment, use a fresh database, place your own PaySim CSV at `data/raw/paysim.csv`, and replace the bootstrap command with:
+
+```powershell
+.venv/Scripts/python.exe -m scripts.bootstrap --paysim data/raw/paysim.csv --limit 200000
+```
+
+See the [data guide](data/README.md) for required columns, ID conventions and dataset handling.
 
 For explicit foreground processes, use two terminals:
 
@@ -106,7 +137,7 @@ Default local mode is **lexical retrieval**, clearly identified in the readiness
 .venv/Scripts/python.exe -m scripts.index_policies
 ```
 
-The first semantic run downloads `sentence-transformers/all-MiniLM-L6-v2`. SQLite mode uses a local embedding matrix; PostgreSQL mode stores 384-dimensional vectors and searches with pgvector cosine distance. Restart the API after changing configuration, model or index. Do not load untrusted `.joblib` artifacts. Local MiniLM indexing and evaluation were verified during setup; the downloaded model is cached on this host.
+The first semantic run downloads `sentence-transformers/all-MiniLM-L6-v2`. SQLite mode uses a local embedding matrix; PostgreSQL mode stores 384-dimensional vectors and searches with pgvector cosine distance. Restart the API after changing configuration, model or index. Do not load untrusted `.joblib` artifacts. Local MiniLM indexing and evaluation have been verified.
 
 The six Markdown documents are intentionally editable, synthetic examples. Citations identify source filename, section, chunk ID and digest; there are no invented PDF page numbers. Reindex after editing policies. Review-band logic lives in `src/agents/report.py` and must be changed and tested together with policy text.
 
@@ -142,7 +173,7 @@ Select the data source before the first initialization. Existing populated volum
 
 Ports bind to localhost only: database 5433, API 8010, dashboard 8510. Compose credentials are explicit **local demo credentials**. The API container receives reader and audit credentials; it does not receive the database-owner password. The reader has SELECT privileges on transaction/policy data, not labels. The audit role can insert reports/predictions and upsert conversation context. Initialization owns schema creation and training.
 
-Docker is not installed on the current host, so container startup and PostgreSQL integration are supplied but not locally verified. For public deployment, first add authentication, analyst-level authorization, session ownership, TLS, secrets management, retention controls and operational monitoring. This project is designed for a local single-user demonstration.
+Container startup and PostgreSQL integration have not yet been verified in the recorded build environment. For public deployment, first add authentication, analyst-level authorization, session ownership, TLS, secrets management, retention controls and operational monitoring. This project is designed for a local single-user demonstration; making the source repository public does not deploy the application.
 
 ## API
 
@@ -209,6 +240,15 @@ models/              Ignored generated model/index artifacts
 ## Next improvements
 
 Calibrate probabilities on a separate validation slice, evaluate the full dataset with a larger later-time fraud sample, expand independent retrieval and adversarial test sets, add reranking and answer-level evaluation, support versioned policy rule ingestion, and add authenticated multi-user case management. No Kubernetes, Kafka or external agent swarm is needed for this version.
+
+## Documentation
+
+- [API requests and example responses](docs/API.md)
+- [Dataset preparation and artifact handling](data/README.md)
+- [Model and retrieval evaluation notes](reports/README.md)
+- [Contribution workflow](CONTRIBUTING.md)
+
+The measured reports and screenshot are checked in for review. They describe a recorded experiment; rerunning on generated demo data produces different metrics.
 
 ## Implementation references
 

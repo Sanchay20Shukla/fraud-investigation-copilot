@@ -1,0 +1,239 @@
+{
+  "transaction_id": "TXN_0000002",
+  "transaction": {
+    "transaction_id": "TXN_0000002",
+    "row_number": 2,
+    "step": 1,
+    "transaction_type": "TRANSFER",
+    "amount": 181.0,
+    "origin_account": "C1305486145",
+    "destination_account": "C553264065",
+    "origin_balance_before": 181.0,
+    "origin_balance_after": 0.0,
+    "destination_balance_before": 0.0,
+    "destination_balance_after": 0.0
+  },
+  "risk": {
+    "fraud_probability": 0.9998865127563477,
+    "risk_score": 99,
+    "risk_level": "HIGH",
+    "model_version": "xgb-59b2f59dad3b",
+    "drivers": [
+      {
+        "feature": "origin_balance_error",
+        "value": 0.0,
+        "shap_value": 5.82963228225708,
+        "direction": "increases risk"
+      },
+      {
+        "feature": "zero_balance_after",
+        "value": 1.0,
+        "shap_value": 2.774231195449829,
+        "direction": "increases risk"
+      },
+      {
+        "feature": "destination_balance_change",
+        "value": 0.0,
+        "shap_value": -0.3590374290943146,
+        "direction": "decreases risk"
+      },
+      {
+        "feature": "destination_balance_before",
+        "value": 0.0,
+        "shap_value": 0.33497437834739685,
+        "direction": "increases risk"
+      },
+      {
+        "feature": "type_PAYMENT",
+        "value": 0.0,
+        "shap_value": 0.3266918659210205,
+        "direction": "increases risk"
+      },
+      {
+        "feature": "amount_balance_ratio",
+        "value": 0.9945054945054945,
+        "shap_value": 0.30162572860717773,
+        "direction": "increases risk"
+      },
+      {
+        "feature": "destination_balance_after",
+        "value": 0.0,
+        "shap_value": 0.19401468336582184,
+        "direction": "increases risk"
+      },
+      {
+        "feature": "origin_balance_change",
+        "value": 181.0,
+        "shap_value": -0.1427690088748932,
+        "direction": "decreases risk"
+      },
+      {
+        "feature": "amount",
+        "value": 181.0,
+        "shap_value": -0.12830358743667603,
+        "direction": "decreases risk"
+      },
+      {
+        "feature": "origin_balance_before",
+        "value": 181.0,
+        "shap_value": 0.07035431265830994,
+        "direction": "increases risk"
+      },
+      {
+        "feature": "type_CASH_OUT",
+        "value": 0.0,
+        "shap_value": -0.06248237192630768,
+        "direction": "decreases risk"
+      },
+      {
+        "feature": "origin_balance_after",
+        "value": 0.0,
+        "shap_value": -0.025902699679136276,
+        "direction": "decreases risk"
+      },
+      {
+        "feature": "large_transaction",
+        "value": 0.0,
+        "shap_value": 0.0,
+        "direction": "decreases risk"
+      },
+      {
+        "feature": "type_TRANSFER",
+        "value": 1.0,
+        "shap_value": 0.0,
+        "direction": "decreases risk"
+      },
+      {
+        "feature": "type_CASH_IN",
+        "value": 0.0,
+        "shap_value": 0.0,
+        "direction": "decreases risk"
+      },
+      {
+        "feature": "type_DEBIT",
+        "value": 0.0,
+        "shap_value": 0.0,
+        "direction": "decreases risk"
+      }
+    ],
+    "shap_base_value": -0.02937295287847519,
+    "shap_units": "log-odds; contributions are not percentage points",
+    "probability_note": "Uncalibrated model estimate, not a confirmed fraud finding"
+  },
+  "risk_score": 99,
+  "risk_level": "HIGH",
+  "recommendation": "ESCALATE_FOR_MANUAL_REVIEW",
+  "summary": "TXN_0000002 is a TRANSFER of 181.00 simulation units. Model risk is 99/100 (HIGH); this is not a confirmed fraud finding. The origin account balance fell from a positive value to zero. The prior 24-step window contains 0 outgoing transactions in the loaded data.",
+  "indicators": [
+    {
+      "id": "transaction",
+      "text": "TXN_0000002 is a TRANSFER of 181.00 simulation units.",
+      "sources": [
+        "TXN_0000002"
+      ]
+    },
+    {
+      "id": "model",
+      "text": "Model risk is 99/100 (HIGH); this is not a confirmed fraud finding.",
+      "sources": [
+        "xgb-59b2f59dad3b"
+      ]
+    },
+    {
+      "id": "depletion",
+      "text": "The origin account balance fell from a positive value to zero.",
+      "sources": [
+        "TXN_0000002"
+      ]
+    },
+    {
+      "id": "history",
+      "text": "The prior 24-step window contains 0 outgoing transactions in the loaded data.",
+      "sources": [
+        "TXN_0000002:history"
+      ]
+    }
+  ],
+  "policy_assessment": [
+    {
+      "text": "Transactions with a risk score greater than or equal to 80 require enhanced investigation and escalation for manual review. A score is a model estimate and does not establish fraud. Review amount, account history, balance anomalies and counterparty behavior. Never automatically freeze an account based on this copilot.",
+      "source_id": "d36cc5314df89387fb59"
+    }
+  ],
+  "history": [],
+  "velocity": {
+    "count": 0,
+    "total_amount": 0,
+    "average_amount": null,
+    "maximum_amount": null,
+    "unique_destinations": 0,
+    "window_steps": 24,
+    "scope": "Loaded rows only; excludes current step"
+  },
+  "sources": [
+    {
+      "id": "TXN_0000002",
+      "kind": "transaction",
+      "source": "transactions"
+    },
+    {
+      "id": "TXN_0000002:history",
+      "kind": "history",
+      "source": "transactions",
+      "scope": "Loaded rows only; excludes current step"
+    },
+    {
+      "id": "xgb-59b2f59dad3b",
+      "kind": "model",
+      "source": "fraud_model.ubj"
+    },
+    {
+      "chunk_id": "d36cc5314df89387fb59",
+      "source": "high_risk_policy.md",
+      "section": "4.2 Enhanced investigation",
+      "content": "Transactions with a risk score greater than or equal to 80 require enhanced investigation and escalation for manual review. A score is a model estimate and does not establish fraud. Review amount, account history, balance anomalies and counterparty behavior. Never automatically freeze an account based on this copilot.",
+      "digest": "86bce97afc1c3bb9018444526faa7c9c805d91a11c1ae20f60c40b7b3345ff5e",
+      "score": 0.4882692382877069,
+      "id": "d36cc5314df89387fb59",
+      "kind": "policy"
+    },
+    {
+      "chunk_id": "81b8d00331615a485190",
+      "source": "high_risk_policy.md",
+      "section": "High-Risk Transaction Policy",
+      "content": "Synthetic portfolio policy, version 1.0. This is not a bank policy or a legal standard.",
+      "digest": "6c48f3148ce546b1c4d7a8c7ed089f6195e5b5a81db731a04d2a114f2e17ed49",
+      "score": 0.17546326774316778,
+      "id": "81b8d00331615a485190",
+      "kind": "policy"
+    },
+    {
+      "chunk_id": "9175b4db980d754f5156",
+      "source": "high_risk_policy.md",
+      "section": "4.3 Moderate and low scores",
+      "content": "Scores from 50 through 79 require manual review. Scores below 50 require standard review; a low score does not establish that a transaction is safe. If policy evidence or model evidence is unavailable, return INSUFFICIENT_EVIDENCE rather than an approval.",
+      "digest": "ea11dbc9eb9e0136a5cfcfca1c8c24b6cc628fa942656146085397275dc57e2c",
+      "score": 0.11955803220144429,
+      "id": "9175b4db980d754f5156",
+      "kind": "policy"
+    }
+  ],
+  "limitations": [
+    "Risk indicates a model estimate; it does not establish fraud or money laundering.",
+    "History covers loaded rows in earlier steps only; absent history is not proof of a new account.",
+    "Policies are synthetic portfolio examples. Amounts use unspecified PaySim simulation units.",
+    "Balances after execution make this a post-transaction investigation tool."
+  ],
+  "generation_mode": "deterministic",
+  "generation_warning": null,
+  "workflow": [
+    "fetch_transaction",
+    "fetch_prior_history",
+    "score_and_explain",
+    "retrieve_policies",
+    "compose_report",
+    "validate_evidence"
+  ],
+  "investigation_id": "3fb1354e-60a8-4a7f-b816-b91924e9b873",
+  "created_at": "2026-09-15T18:56:25.456158+00:00"
+}

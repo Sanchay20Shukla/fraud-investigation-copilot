@@ -1,0 +1,12 @@
+{
+  "core_tests_passed": 36,
+  "dataset_rows": 200000,
+  "browser_checked": [
+    "investigation",
+    "model_explanation",
+    "policy_citations"
+  ],
+  "semantic_investigation": "passed",
+  "docker_postgresql": "not tested: Docker unavailable",
+  "live_openai": "not tested: disabled without credentials"
+}

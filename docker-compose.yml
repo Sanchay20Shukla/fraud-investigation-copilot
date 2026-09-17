@@ -1,0 +1,64 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: copilot
+      POSTGRES_USER: copilot_admin
+      POSTGRES_PASSWORD: local_admin
+    ports: ["127.0.0.1:5433:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U copilot_admin -d copilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  setup:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://copilot_admin:local_admin@postgres:5432/copilot
+      RETRIEVAL_MODE: semantic
+      HF_HOME: /cache/huggingface
+    command: ["sh", "-c", "python -m scripts.bootstrap --demo && python -m scripts.grant_roles"]
+    volumes:
+      - artifacts:/app/models
+      - hf_cache:/cache/huggingface
+      - ./data/raw:/app/data/raw
+    depends_on:
+      postgres: {condition: service_healthy}
+  backend:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://copilot_reader:local_reader@postgres:5432/copilot
+      READ_DATABASE_URL: postgresql+psycopg://copilot_reader:local_reader@postgres:5432/copilot
+      AUDIT_DATABASE_URL: postgresql+psycopg://copilot_audit:local_audit@postgres:5432/copilot
+      RETRIEVAL_MODE: semantic
+      HF_HOME: /cache/huggingface
+      LLM_ENABLED: ${LLM_ENABLED:-false}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+    ports: ["127.0.0.1:8010:8010"]
+    volumes:
+      - artifacts:/app/models:ro
+      - hf_cache:/cache/huggingface
+    depends_on:
+      setup: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8010/ready')"]
+      interval: 20s
+      timeout: 60s
+      retries: 5
+      start_period: 120s
+  frontend:
+    build: .
+    command: ["python", "-m", "streamlit", "run", "dashboard/app.py", "--server.address", "0.0.0.0", "--server.port", "8510", "--server.headless", "true"]
+    environment:
+      API_BASE_URL: http://backend:8010
+    ports: ["127.0.0.1:8510:8510"]
+    depends_on:
+      backend: {condition: service_healthy}
+volumes:
+  pgdata:
+  artifacts:
+  hf_cache:

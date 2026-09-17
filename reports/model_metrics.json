@@ -1,0 +1,63 @@
+{
+  "model_version": "xgb-59b2f59dad3b",
+  "dataset_rows": 200000,
+  "feature_names": [
+    "amount",
+    "origin_balance_before",
+    "origin_balance_after",
+    "destination_balance_before",
+    "destination_balance_after",
+    "amount_balance_ratio",
+    "origin_balance_error",
+    "origin_balance_change",
+    "destination_balance_change",
+    "zero_balance_after",
+    "large_transaction",
+    "type_TRANSFER",
+    "type_CASH_OUT",
+    "type_CASH_IN",
+    "type_PAYMENT",
+    "type_DEBIT"
+  ],
+  "threshold_selected_on_validation": 0.95,
+  "precision": 0.9473684210526315,
+  "recall": 0.9,
+  "f1": 0.9230769230769231,
+  "pr_auc": 0.9087092857505811,
+  "roc_auc": 0.9968943208322535,
+  "confusion_matrix": [
+    [
+      54021,
+      1
+    ],
+    [
+      2,
+      18
+    ]
+  ],
+  "splits": {
+    "train": {
+      "rows": 72726,
+      "fraud_rows": 109,
+      "min_step": 1,
+      "max_step": 9
+    },
+    "validation": {
+      "rows": 73232,
+      "fraud_rows": 18,
+      "min_step": 10,
+      "max_step": 11
+    },
+    "test": {
+      "rows": 54042,
+      "fraud_rows": 20,
+      "min_step": 12,
+      "max_step": 13
+    }
+  },
+  "limitations": [
+    "Uncalibrated model probability; score bands are synthetic policy thresholds.",
+    "Post-transaction balance features are unsuitable for pre-authorization scoring.",
+    "Subset results are not whole-PaySim or real-world performance."
+  ]
+}

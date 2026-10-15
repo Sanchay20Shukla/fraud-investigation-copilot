@@ -19,6 +19,13 @@ BASE = os.getenv('API_BASE_URL', 'http://127.0.0.1:8010').rstrip('/')
 
 
 def request(method, path, body=None):
+    if globals().get('CLOUD_DEMO', False):
+        from src.cloud_demo import chat
+        try:
+            return chat(body['question'], body.get('session_id'))
+        except (ValueError, LookupError) as exc:
+            st.error(str(exc))
+            return None
     try:
         response = httpx.request(method, BASE + path, json=body, timeout=60)
         response.raise_for_status()
@@ -102,11 +109,17 @@ with st.sidebar:
     st.write('Which accounts sent to this destination?')
     st.write('What is the high-risk escalation policy?')
     st.divider()
-    st.caption('Synthetic policies · PaySim data\n\nAnalyst decision support only')
+    st.caption('Synthetic policies · ' + ('Synthetic demo transactions' if globals().get('CLOUD_DEMO', False) else 'PaySim data') + '\n\nAnalyst decision support only')
 
 st.markdown('<div class="eyebrow">EVIDENCE BEFORE CONCLUSIONS</div>', unsafe_allow_html=True)
 st.title('Every alert deserves a clear explanation.')
 st.markdown('<div class="lede">Transaction evidence, model drivers and policy context — in one investigation.</div>', unsafe_allow_html=True)
+
+if globals().get('CLOUD_DEMO', False):
+    st.caption('Public portfolio demo · 2,000 synthetic transactions · Live XGBoost + SHAP + lexical policy retrieval · No API key needed')
+    if not st.session_state.get('demo_opened'):
+        st.session_state.demo_opened = True
+        submitted = True
 
 if submitted:
     with st.spinner('Collecting transaction, model and policy evidence…'):

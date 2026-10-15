@@ -1,5 +1,7 @@
 # Fraud Investigation RAG Copilot
 
+**[View the Working Model — dashboard, explanation chart and saved investigation](Working%20Model.md)**
+
 **Evidence-based transaction investigation with explainable machine learning and retrieval-augmented policy analysis.**
 
 Python · FastAPI · Streamlit · LangGraph · XGBoost · TreeSHAP · PostgreSQL / pgvector

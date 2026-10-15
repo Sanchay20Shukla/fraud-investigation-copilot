@@ -1,5 +1,7 @@
 # Fraud Investigation RAG Copilot
 
+**[Open the live Streamlit demo](https://sanchay-fraud-investigation-copilot.streamlit.app/)** — opens directly in your browser. Uses 2,000 synthetic transactions, live XGBoost scoring, SHAP explanations and lexical policy retrieval. No API key or local installation required.
+
 **[View the Working Model — dashboard, explanation chart and saved investigation](Working%20Model.md)**
 
 **Evidence-based transaction investigation with explainable machine learning and retrieval-augmented policy analysis.**
@@ -18,7 +20,11 @@ Investigate a PaySim transaction with database evidence, XGBoost risk, TreeSHAP 
 
 Investigating a fraud alert usually requires switching between transaction records, model scores, account history and policy documents. This copilot brings those sources into one auditable report, showing both the evidence and what it cannot establish.
 
-**Project status:** working local portfolio application. The core test suite and local retrieval modes have been verified. PostgreSQL/Docker and live OpenAI calls still require integration verification. This is an analyst-support demonstration, not a production fraud decision system.
+**Project status:** working local portfolio application with a public synthetic Streamlit demo. The core test suite and local retrieval modes have been verified. PostgreSQL/Docker and live OpenAI calls still require integration verification. This is an analyst-support demonstration, not a production fraud decision system.
+
+### Public demo deployment
+
+`streamlit_app.py` runs the same investigation service inside Streamlit, without a separate FastAPI server. It creates an isolated temporary SQLite database, trains a model on 2,000 deterministic synthetic transactions and indexes the synthetic policies once per running app instance. LLM calls are disabled. Browser sessions receive separate conversation IDs; ephemeral demo reports reset when the app restarts. Use only the supplied demo transactions. Scores differ from the saved PaySim experiment. To run this mode locally: `python -m streamlit run streamlit_app.py`.
 
 ## Example questions
 

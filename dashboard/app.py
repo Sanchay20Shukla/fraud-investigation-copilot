@@ -97,7 +97,7 @@ with st.sidebar:
     st.caption('FRAUD INVESTIGATION COPILOT')
     st.divider()
     with st.form('investigate'):
-        transaction_id = st.text_input('Transaction ID', value='TXN_0000002', max_chars=11)
+        transaction_id = st.text_input('Transaction ID', value='TXN_0000549' if globals().get('CLOUD_DEMO', False) else 'TXN_0000002', max_chars=11)
         submitted = st.form_submit_button('Investigate transaction', use_container_width=True, type='primary')
     if st.button('Start a new conversation', use_container_width=True):
         for key in ['session_id', 'messages', 'report']:

@@ -1,5 +1,11 @@
 # Working Model — Fraud Investigation RAG Copilot
 
+## Open the live website
+
+**[Launch the interactive Streamlit app](https://sanchay-fraud-investigation-copilot.streamlit.app/)**
+
+The public app opens directly with a synthetic example investigation. Explore model drivers, earlier account history and policy citations, or ask a follow-up question. It runs the actual investigation pipeline using 2,000 generated educational transactions; results differ from the saved PaySim example below. No API key or software installation is required. If the hosting service has put the app to sleep, allow it to wake up.
+
 **An investigator dashboard that combines transaction evidence, an explainable fraud model and retrieved policy citations.** This page presents an existing local dashboard capture and saved execution artifacts so reviewers can inspect the project without installing it.
 
 ## Investigator dashboard
@@ -60,7 +66,7 @@ Which accounts sent to this destination?
 What is the high-risk escalation policy?
 ```
 
-Default local mode uses lexical policy retrieval and deterministic report generation. Optional semantic retrieval and OpenAI-assisted fact selection are described in the [full README](README.md). This GitHub page displays the working-model preview; it is not a hosted interactive application.
+Default local mode and the public synthetic demo use lexical policy retrieval and deterministic report generation. Optional semantic retrieval and OpenAI-assisted fact selection are described in the [full README](README.md). This GitHub page displays the saved working-model preview; the live app is linked at the top.
 
 ## Explore the implementation
 
